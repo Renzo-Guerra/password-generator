@@ -1,33 +1,28 @@
 class PasswordGenerator:
+  
+  __MIN_LENGTH_ALLOWED = 6
+  __DEFAULT_LENGTH = 8
+  
   """
     Initiates the Object, by default the password will has:
     * __min_length: 8
-    * __max_length: 14
     * __must_have_special_characters: False
     * __must_have_numbers: False
     * __must_have_uppercase: False
   """
   def __init__(self):
-    self.__min_length = 8
-    self.__max_length = 14
+    self.__length = self.__DEFAULT_LENGTH
     self.__must_have_special_characters = False
     self.__must_have_numbers = False
     self.__must_have_uppercase = False
   
-  def set_min_length(self, min_length):
+  def set_length(self, min_length):
     if min_length.isdigit() == False:
       print("Minimum length must be a positive number!")
-    else:
-      self.__min_length = min_length
-    
-    return self
-  
-  def set_max_length(self, max_length):
-    if max_length.isdigit() == False:
-      print("Maximum length must be a positive number!")
-    else:
-      self.__max_length = max_length
-    
+    elif int(min_length) > self.__MIN_LENGTH_ALLOWED:
+      print(f"Minimum length must be at least {self.__MIN_LENGTH_ALLOWED}!")
+    else:  
+      self.__length = min_length
     return self
   
   def set_must_have_special_characters(self, must_have_special_characters):
@@ -61,4 +56,4 @@ class PasswordGenerator:
     return self
 
   def generate_password(self):
-    return f"min_length: {self.__min_length}, max_length: {self.__max_length}, must_have_special_characters: {self.__must_have_special_characters}, must_have_numbers: {self.__must_have_numbers}, must_have_uppercase: {self.__must_have_uppercase}." 
+    return f"length: {self.__length}, must_have_special_characters: {self.__must_have_special_characters}, must_have_numbers: {self.__must_have_numbers}, must_have_uppercase: {self.__must_have_uppercase}." 
