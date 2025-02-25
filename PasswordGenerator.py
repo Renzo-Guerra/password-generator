@@ -20,7 +20,7 @@ class PasswordGenerator:
   def set_length(self, min_length):
     if min_length.isdigit() == False:
       print("Minimum length must be a positive number!")
-    elif int(min_length) > self.__MIN_LENGTH_ALLOWED:
+    elif int(min_length) < self.__MIN_LENGTH_ALLOWED:
       print(f"Minimum length must be at least {self.__MIN_LENGTH_ALLOWED}!")
     else:  
       self.__length = min_length
