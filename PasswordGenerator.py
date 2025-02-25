@@ -1,8 +1,9 @@
+from random import randint
+
 class PasswordGenerator:
-  
   __MIN_LENGTH_ALLOWED = 6
   __DEFAULT_LENGTH = 8
-  
+
   """
     Initiates the Object, by default the password will has:
     * __min_length: 8
@@ -54,6 +55,24 @@ class PasswordGenerator:
       self.__must_have_uppercase = must_have_uppercase == "true"
 
     return self
+
+  def __get_random_lowercase(self):
+    return chr(randint(97, 122))
+  
+  def __get_random_uppercase(self):
+    return self.__get_random_lowercase().upper()
+  
+  def __get_random_digit(self):
+    return chr(randint(48, 57))
+
+  def __get_random_special_character(self):
+    pool = []
+    pool.extend(range(33, 48))
+    pool.extend(range(58, 65))
+    pool.extend(range(91, 97))
+    pool.extend(range(123, 127))
+
+    return chr(pool[randint(0, len(pool)-1)]) 
 
   def generate_password(self):
     return f"length: {self.__length}, must_have_special_characters: {self.__must_have_special_characters}, must_have_numbers: {self.__must_have_numbers}, must_have_uppercase: {self.__must_have_uppercase}." 
