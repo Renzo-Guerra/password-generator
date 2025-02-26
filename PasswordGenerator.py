@@ -23,7 +23,7 @@ class PasswordGenerator:
     elif int(min_length) < self.__MIN_LENGTH_ALLOWED:
       print(f"Minimum length must be at least {self.__MIN_LENGTH_ALLOWED}!")
     else:  
-      self.__length = min_length
+      self.__length = int(min_length)
     return self
   
   def set_must_have_special_characters(self, must_have_special_characters):
@@ -75,4 +75,42 @@ class PasswordGenerator:
     return chr(pool[randint(0, len(pool)-1)]) 
 
   def generate_password(self):
-    return f"length: {self.__length}, must_have_special_characters: {self.__must_have_special_characters}, must_have_numbers: {self.__must_have_numbers}, must_have_uppercase: {self.__must_have_uppercase}." 
+    # Initialize the password with empty characters
+    password = [''] * self.__length
+    index_pool_remaining = list(range(len(password)))
+    
+    divided_by = 1
+    
+    if(self.__must_have_numbers):
+      divided_by += 1
+    if(self.__must_have_special_characters):
+      divided_by += 1
+    if(self.__must_have_uppercase):
+      divided_by += 1
+
+    amount_per_group = int(self.__length / divided_by)
+
+    if self.__must_have_numbers:
+      for _ in range(amount_per_group):
+        index = randint(0, len(index_pool_remaining)-1)
+        password[index_pool_remaining[index]] = self.__get_random_digit()
+        index_pool_remaining.pop(index)
+
+    if self.__must_have_uppercase:
+      for _ in range(amount_per_group):
+        index = randint(0, len(index_pool_remaining)-1)
+        password[index_pool_remaining[index]] = self.__get_random_uppercase()
+        index_pool_remaining.pop(index)
+    
+    if self.__must_have_special_characters:
+      for _ in range(amount_per_group):
+        index = randint(0, len(index_pool_remaining)-1)
+        password[index_pool_remaining[index]] = self.__get_random_special_character()
+        index_pool_remaining.pop(index)
+
+    for _ in range(len(index_pool_remaining)):
+      _index = len(index_pool_remaining)-1
+      password[index_pool_remaining[_index]] = self.__get_random_lowercase()
+      index_pool_remaining.pop()
+
+    return "".join(password)
