@@ -46,7 +46,7 @@ class PasswordGenerator:
 
     return self
 
-  def set_must_have_uppercase(self, must_have_uppercase):
+  def set_must_have_uppercases(self, must_have_uppercase):
     must_have_uppercase = must_have_uppercase.strip().lower()
 
     if must_have_uppercase not in ("true", "false"):
@@ -114,3 +114,4 @@ class PasswordGenerator:
       index_pool_remaining.pop()
 
     return "".join(password)
+  
