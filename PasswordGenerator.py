@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, sample
 
 class PasswordGenerator:
   __MIN_LENGTH_ALLOWED = 6
@@ -74,10 +74,17 @@ class PasswordGenerator:
 
     return chr(pool[randint(0, len(pool)-1)]) 
 
+  def __excecute(index_pool_remaining, password, function): 
+    index = index_pool_remaining.pop()
+    password[index] = function()
+
   def generate_password(self):
     # Initialize the password with empty characters
     password = [''] * self.__length
+    # Keep in track all the available indexes that has't been used in password[]
     index_pool_remaining = list(range(len(password)))
+    # shuffle the list
+    index_pool_remaining = sample(index_pool_remaining, len(index_pool_remaining))
     
     divided_by = 1
     
@@ -88,30 +95,23 @@ class PasswordGenerator:
     if(self.__must_have_uppercase):
       divided_by += 1
 
-    amount_per_group = int(self.__length / divided_by)
+    times_to_excecute = int(self.__length / divided_by)
 
     if self.__must_have_numbers:
-      for _ in range(amount_per_group):
-        index = randint(0, len(index_pool_remaining)-1)
-        password[index_pool_remaining[index]] = self.__get_random_digit()
-        index_pool_remaining.pop(index)
+      for _ in range(times_to_excecute):
+        self.__excecute(index_pool_remaining, password, self.__get_random_digit)
+
+    if self.__must_have_special_characters:
+      for _ in range(times_to_excecute):
+        self.__excecute(index_pool_remaining, password, self.__get_random_special_character)
 
     if self.__must_have_uppercase:
-      for _ in range(amount_per_group):
-        index = randint(0, len(index_pool_remaining)-1)
-        password[index_pool_remaining[index]] = self.__get_random_uppercase()
-        index_pool_remaining.pop(index)
+      for _ in range(times_to_excecute):
+        self.__excecute(index_pool_remaining, password, self.__get_random_uppercase)
     
-    if self.__must_have_special_characters:
-      for _ in range(amount_per_group):
-        index = randint(0, len(index_pool_remaining)-1)
-        password[index_pool_remaining[index]] = self.__get_random_special_character()
-        index_pool_remaining.pop(index)
-
-    for _ in range(len(index_pool_remaining)):
-      _index = len(index_pool_remaining)-1
-      password[index_pool_remaining[_index]] = self.__get_random_lowercase()
-      index_pool_remaining.pop()
-
+    while len(index_pool_remaining) != 0:
+      for _ in range(times_to_excecute):
+        self.__excecute(index_pool_remaining, password, self.__get_random_lowercase)
+      
     return "".join(password)
   
